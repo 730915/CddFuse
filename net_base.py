@@ -5,7 +5,7 @@ import torch.nn.functional as F
 import torch.utils.checkpoint as checkpoint
 from timm.models.layers import DropPath, to_2tuple, trunc_normal_
 from einops import rearrange
-
+# 原始模块
 
 def drop_path(x, drop_prob: float = 0., training: bool = False):
     """
