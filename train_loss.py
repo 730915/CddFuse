@@ -7,7 +7,7 @@
 '''
 
 # 导入自定义的网络模型组件
-from net_fft import Restormer_Encoder, Restormer_Decoder, BaseFeatureExtraction, DetailFeatureExtraction
+from net_KanIRCSA import Restormer_Encoder, Restormer_Decoder, BaseFeatureExtraction, DetailFeatureExtraction
 
 # 导入数据集处理类
 from utils.dataset import H5Dataset

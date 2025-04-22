@@ -498,7 +498,7 @@ class Restormer_Encoder(nn.Module):
         # 使用通道降维层将通道数从128降为64
         reduced_feature = self.reduce_channel(combined_feature)
         spatial_attended = self.spatial_attention(reduced_feature, reduced_feature)  # 使用降维后的特征
-
+        # 训练时没有用到spatial_attended
         return base_feature, detail_feature, spatial_attended  # 返回增强后的特征
 
 class Restormer_Decoder(nn.Module):
@@ -533,10 +533,11 @@ class Restormer_Decoder(nn.Module):
         )
 
     def forward(self, inp_img, base_feature, detail_feature):
+        # 合并基特征和细节特征
         out_enc_level0 = torch.cat((base_feature, detail_feature), dim=1)
         out_enc_level0 = self.reduce_channel(out_enc_level0)
 
-        # 应用 IRCSA
+        # 对合并后的特征 应用 IRCSA
         spatial_attended = self.spatial_attention_decoder(out_enc_level0, out_enc_level0)
 
         out_enc_level1 = self.encoder_level2(spatial_attended)
