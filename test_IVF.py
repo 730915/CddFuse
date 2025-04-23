@@ -1,5 +1,5 @@
 # 导入自定义的网络模型组件
-from net_fft import Restormer_Decoder,Restormer_Encoder, BaseFeatureExtraction, DetailFeatureExtraction
+from net_base import Restormer_Decoder,Restormer_Encoder, BaseFeatureExtraction, DetailFeatureExtraction
 import os
 import numpy as np
 from utils.Evaluator import Evaluator
@@ -12,7 +12,7 @@ warnings.filterwarnings("ignore")
 logging.basicConfig(level=logging.CRITICAL)
 
 os.environ["CUDA_VISIBLE_DEVICES"] = "0"
-ckpt_path=r"models/CDDFuse_fft_04-21-18-25.pth"
+ckpt_path=r"models/CDDFuse_02-26-21-06.pth"
 for dataset_name in ["TNO","RoadScene"]:
     print("\n"*2+"="*80)
     model_name="CDDFuse    "

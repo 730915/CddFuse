@@ -29,6 +29,9 @@ var/
 # 忽略模型文件（可选，取决于您是否想要版本控制模型文件）
 # /models/*.pth
 
+# 忽略test_result目录下的所有文件
+/test_result/
+
 # 忽略IDE相关文件
 .idea/
 .vscode/
