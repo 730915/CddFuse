@@ -16,7 +16,7 @@ class FrequencyBasedFeatureProcessing(nn.Module):
         self.freq_decomp = FrequencyDecomposition(feature_dim=dim, cutoff=0.2, N=900)
         
         # 从net.py导入的模块
-        from net import BaseFeatureExtraction, DetailFeatureExtraction, LayerNorm
+        from net_fcm import BaseFeatureExtraction, DetailFeatureExtraction, LayerNorm
         
         # 基础特征处理模块 - 处理低频部分
         self.base_feature_extraction = BaseFeatureExtraction(
@@ -84,7 +84,7 @@ class FrequencyBasedRestormerEncoder(nn.Module):
         super(FrequencyBasedRestormerEncoder, self).__init__()
         
         # 从net.py导入必要的模块
-        from net import OverlapPatchEmbed, TransformerBlock
+        from net_fcm import OverlapPatchEmbed, TransformerBlock
         
         # 特征嵌入层
         self.patch_embed = OverlapPatchEmbed(inp_channels, dim)
@@ -125,7 +125,7 @@ if __name__ == '__main__':
     modelE = FrequencyBasedRestormerEncoder().cuda()
     
     # 从net.py导入解码器
-    from net import Restormer_Decoder
+    from net_fcm import Restormer_Decoder
     modelD = Restormer_Decoder().cuda()
     
     # 创建测试输入

@@ -74,16 +74,16 @@ class FCM(nn.Module):
                 m.bias.data.zero_()
 
     def forward(self, x1, x2):
-        weights = nn.ReLU()(self.weights)
-        fuse_weights = weights / (torch.sum(weights, dim=0) + self.eps)
+        weights = nn.ReLU()(self.weights)  # 可训练融合权重
+        fuse_weights = weights / (torch.sum(weights, dim=0) + self.eps)  # 归一化
 
-        spatial_weights = self.spatial_weights(x1, x2)
-        x1_1 = x1 + fuse_weights[0] * spatial_weights[1] * x2
+        spatial_weights = self.spatial_weights(x1, x2)  # 空间权重
+        x1_1 = x1 + fuse_weights[0] * spatial_weights[1] * x2  # 空间校正融合
         x2_1 = x2 + fuse_weights[0] * spatial_weights[0] * x1
 
-        channel_weights = self.channel_weights(x1_1, x2_1)
+        channel_weights = self.channel_weights(x1_1, x2_1)  # 通道权重
 
-        main_out = x1_1 + fuse_weights[1] * channel_weights[1] * x2_1
+        main_out = x1_1 + fuse_weights[1] * channel_weights[1] * x2_1  # 通道校正融合
         aux_out = x2_1 + fuse_weights[1] * channel_weights[0] * x1_1
         return main_out, aux_out
     

@@ -7,7 +7,7 @@
 '''
 
 # 导入自定义的网络模型组件
-from net_KanIRCSA import Restormer_Encoder, Restormer_Decoder, BaseFeatureExtraction, DetailFeatureExtraction
+from net_fcm import Restormer_Encoder, Restormer_Decoder, BaseFeatureExtraction, DetailFeatureExtraction
 
 # 导入数据集处理类
 from utils.dataset import H5Dataset
@@ -160,9 +160,8 @@ for epoch in range(num_epochs):
         optimizer4.zero_grad()
 
         if epoch < epoch_gap: # 第一阶段训练（Phase I）
-            # 提取可见光图像的特征
+            # 分别处理可见光和红外图像，不使用FCM模块的双输入模式
             feature_V_B, feature_V_D, _ = DIDF_Encoder(data_VIS)
-            # 提取红外图像的特征
             feature_I_B, feature_I_D, _ = DIDF_Encoder(data_IR)
             # 重建可见光图像
             data_VIS_hat, _ = DIDF_Decoder(data_VIS, feature_V_B, feature_V_D)
@@ -201,12 +200,12 @@ for epoch in range(num_epochs):
             # 更新解码器参数
             optimizer2.step()
         else:  # 第二阶段训练（Phase II）
-            # 提取可见光和红外图像的特征
-            feature_V_B, feature_V_D, feature_V = DIDF_Encoder(data_VIS)
-            feature_I_B, feature_I_D, feature_I = DIDF_Encoder(data_IR)
-            # 融合基础特征
+            # 使用修改后的编码器同时处理可见光和红外图像
+            # 这里会通过FCM模块处理encoder_level1的输出
+            (feature_V_B, feature_V_D, feature_V), (feature_I_B, feature_I_D, feature_I) = DIDF_Encoder(data_VIS, data_IR)
+            # 融合基础特征 - 注意这里的特征已经通过FCM模块处理过
             feature_F_B = BaseFuseLayer(feature_I_B+feature_V_B)
-            # 融合细节特征
+            # 融合细节特征 - 注意这里的特征已经通过FCM模块处理过
             feature_F_D = DetailFuseLayer(feature_I_D+feature_V_D)
 
             # 使用融合特征生成融合图像
